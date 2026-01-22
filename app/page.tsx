@@ -1,15 +1,11 @@
 "use client";
-import { Dashboard } from "@/components/Dashboard";
-import { SidebarNav } from "@/components/SidebarNav";
-import { useState } from "react";
+
+import { SidebarNav } from "@/components/ui/dashboard/sidebar-nav";
 
 export default function Home() {
-  const [activePage, setActivePage] = useState("Dashboard");
   return (
     <main>
-      <SidebarNav setActivePage={setActivePage}>
-        <Dashboard activePage={activePage} />
-      </SidebarNav>
+      <SidebarNav />
     </main>
   );
 }

@@ -1,22 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 
-interface Links {
-  label: string;
-  href: string;
-  icon: React.JSX.Element | React.ReactNode;
-}
-
 interface SidebarContextProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   animate: boolean;
-  activePage: string;
-  setActivePage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
@@ -36,29 +27,24 @@ export const SidebarProvider = ({
   open: openProp,
   setOpen: setOpenProp,
   animate = true,
-  activePage: activePageProp,
-  setActivePage: setActivePageProp,
 }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
-  activePage?: string;
-  setActivePage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [openState, setOpenState] = useState(false);
-  const [activePageState, setActivePageState] = useState("Dashboard");
 
   const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
-  const activePage =
-    activePageProp !== undefined ? activePageProp : activePageState;
-  const setActivePage =
-    setActivePageProp !== undefined ? setActivePageProp : setActivePageState;
 
   return (
     <SidebarContext.Provider
-      value={{ open, setOpen, animate: animate, activePage, setActivePage }}
+      value={{
+        open,
+        setOpen,
+        animate: animate,
+      }}
     >
       {children}
     </SidebarContext.Provider>
@@ -70,24 +56,14 @@ export const Sidebar = ({
   open,
   setOpen,
   animate,
-  activePage,
-  setActivePage,
 }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
-  activePage?: string;
-  setActivePage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <SidebarProvider
-      open={open}
-      setOpen={setOpen}
-      animate={animate}
-      activePage={activePage}
-      setActivePage={setActivePage}
-    >
+    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
       {children}
     </SidebarProvider>
   );
@@ -175,41 +151,5 @@ export const MobileSidebar = ({
         </AnimatePresence>
       </div>
     </>
-  );
-};
-
-export const SidebarLink = ({
-  link,
-  className,
-  onClick,
-  ...props
-}: {
-  link: Links;
-  className?: string;
-  onClick?: (e: any) => void;
-}) => {
-  const { open, animate } = useSidebar();
-  return (
-    <a
-      href={link.href}
-      className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2",
-        className,
-      )}
-      {...props}
-      onClick={onClick}
-    >
-      {link.icon}
-
-      <motion.span
-        animate={{
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block p-0! m-0!"
-      >
-        {link.label}
-      </motion.span>
-    </a>
   );
 };
