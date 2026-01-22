@@ -1,11 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "./ui/sidebar";
 import {
   IconArrowLeft,
   IconBrandTabler,
+  IconFileAnalytics,
   IconSettings,
-  IconUserBolt,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -13,11 +14,9 @@ import Image from "next/image";
 
 export function SidebarNav({
   children,
-  activePage,
   setActivePage,
 }: {
   children?: React.ReactNode;
-  activePage: string;
   setActivePage: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const links = [
@@ -29,10 +28,10 @@ export function SidebarNav({
       ),
     },
     {
-      label: "Profile",
-      href: "#profile",
+      label: "Analytics",
+      href: "#analytics",
       icon: (
-        <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+        <IconFileAnalytics className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
@@ -69,7 +68,7 @@ export function SidebarNav({
                   link={link}
                   onClick={(e: any) => {
                     e.preventDefault();
-                    setActivePage(activePage);
+                    setActivePage(link.label);
                   }}
                 />
               ))}
@@ -125,5 +124,3 @@ export const LogoIcon = () => {
     </a>
   );
 };
-
-// Dummy dashboard component with content

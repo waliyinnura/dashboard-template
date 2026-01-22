@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { cn } from "@/lib/utils";
 import React, { useState, createContext, useContext } from "react";
@@ -14,6 +15,8 @@ interface SidebarContextProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   animate: boolean;
+  activePage: string;
+  setActivePage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SidebarContext = createContext<SidebarContextProps | undefined>(
@@ -33,19 +36,30 @@ export const SidebarProvider = ({
   open: openProp,
   setOpen: setOpenProp,
   animate = true,
+  activePage: activePageProp,
+  setActivePage: setActivePageProp,
 }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
+  activePage?: string;
+  setActivePage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   const [openState, setOpenState] = useState(false);
+  const [activePageState, setActivePageState] = useState("Dashboard");
 
   const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
+  const activePage =
+    activePageProp !== undefined ? activePageProp : activePageState;
+  const setActivePage =
+    setActivePageProp !== undefined ? setActivePageProp : setActivePageState;
 
   return (
-    <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
+    <SidebarContext.Provider
+      value={{ open, setOpen, animate: animate, activePage, setActivePage }}
+    >
       {children}
     </SidebarContext.Provider>
   );
@@ -56,14 +70,24 @@ export const Sidebar = ({
   open,
   setOpen,
   animate,
+  activePage,
+  setActivePage,
 }: {
   children: React.ReactNode;
   open?: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   animate?: boolean;
+  activePage?: string;
+  setActivePage?: React.Dispatch<React.SetStateAction<string>>;
 }) => {
   return (
-    <SidebarProvider open={open} setOpen={setOpen} animate={animate}>
+    <SidebarProvider
+      open={open}
+      setOpen={setOpen}
+      animate={animate}
+      activePage={activePage}
+      setActivePage={setActivePage}
+    >
       {children}
     </SidebarProvider>
   );
@@ -88,7 +112,7 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-[300px] shrink-0",
+          "h-full px-4 py-4 hidden  md:flex md:flex-col bg-neutral-100 dark:bg-neutral-800 w-75 shrink-0",
           className,
         )}
         animate={{
@@ -135,7 +159,7 @@ export const MobileSidebar = ({
                 ease: "easeInOut",
               }}
               className={cn(
-                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-[100] flex flex-col justify-between",
+                "fixed h-full w-full inset-0 bg-white dark:bg-neutral-900 p-10 z-100 flex flex-col justify-between",
                 className,
               )}
             >
@@ -157,10 +181,12 @@ export const MobileSidebar = ({
 export const SidebarLink = ({
   link,
   className,
+  onClick,
   ...props
 }: {
   link: Links;
   className?: string;
+  onClick?: (e: any) => void;
 }) => {
   const { open, animate } = useSidebar();
   return (
@@ -171,6 +197,7 @@ export const SidebarLink = ({
         className,
       )}
       {...props}
+      onClick={onClick}
     >
       {link.icon}
 
@@ -179,7 +206,7 @@ export const SidebarLink = ({
           display: animate ? (open ? "inline-block" : "none") : "inline-block",
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0"
+        className="text-neutral-700 dark:text-neutral-200 text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block p-0! m-0!"
       >
         {link.label}
       </motion.span>
